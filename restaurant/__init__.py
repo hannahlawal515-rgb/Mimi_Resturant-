@@ -1,0 +1,1 @@
+"""Restaurant menu and ordering application."""

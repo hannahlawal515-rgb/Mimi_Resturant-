@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Mimi's Table | African flavour, around the table{% endblock %}
+{% block content %}
+<div class="announcement"><span>Freshly made, always</span><span class="announcement-dot"></span><span>Orders & delivery on WhatsApp</span></div>
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="Mimi's Table home"><span class="brand-mark">M</span><span>Mimi's <em>Table</em></span></a>
+  <nav class="main-nav" aria-label="Main navigation"><a href="#menu">Our menu</a><a href="#story">Our table</a><a class="nav-order" href="#menu">Find your meal <span aria-hidden="true">↗</span></a></nav>
+  <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+</header>
+<main id="top">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line"></span> FROM OUR KITCHEN TO YOURS</p>
+      <h1>A little taste<br>of <span>everywhere.</span></h1>
+      <p class="hero-description">Big-hearted African classics and much-loved plates from around the world, made fresh and served with a little extra love.</p>
+      <a class="button button-light" href="#menu">Explore the menu <span aria-hidden="true">↓</span></a>
+      <div class="hero-note"><span class="note-stars">★★★★★</span><span>Made fresh. Shared happily.</span></div>
+    </div>
+    <div class="hero-visual">
+      <img class="hero-image" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1400&q=85" alt="A colourful table of freshly prepared dishes">
+      <div class="hero-stamp"><span>GOOD FOOD</span><strong>Good<br>company</strong><span class="stamp-sun">✳</span></div>
+      <div class="image-caption"><span>01 / 03</span><span>Gather around</span></div>
+    </div>
+    <div class="hero-index">LAGOS · NIGERIA</div>
+  </section>
+
+  <section class="menu-section" id="menu">
+    <div class="section-heading">
+      <div><p class="eyebrow eyebrow-dark"><span class="eyebrow-line"></span> THE GOOD STUFF</p><h2>What's cooking<span class="heading-period">?</span></h2></div>
+      <p class="section-intro">A table full of favourites, from home and a little further away.</p>
+    </div>
+    <div class="menu-toolbar">
+      <div class="filter-list" role="group" aria-label="Filter dishes">
+        <button class="filter-button is-active" data-filter="all">All the good stuff <span>{{ dishes|length }}</span></button>
+        <button class="filter-button" data-filter="african">African</button>
+        <button class="filter-button" data-filter="intercontinental">Intercontinental</button>
+        <button class="filter-button" data-filter="drinks">Drinks</button>
+      </div>
+      <label class="search-box"><span aria-hidden="true">⌕</span><input type="search" id="dish-search" placeholder="Find a favourite" aria-label="Search dishes"></label>
+    </div>
+    <div class="dish-grid" id="dish-grid">
+      {% for dish in dishes %}
+      <article class="dish-card" data-category="{{ dish.category }}" data-name="{{ dish.name|lower }}">
+        <div class="dish-photo-wrap">
+          <img class="dish-photo" src="{{ dish.image_url }}" alt="{{ dish.name }}" loading="lazy">
+          <span class="food-tag">ADD FOOD</span>
+          {% if dish.is_featured %}<span class="featured-tag">HOUSE FAVOURITE</span>{% endif %}
+          <span class="dish-number">{{ forloop.counter|stringformat:"02d" }}</span>
+        </div>
+        <div class="dish-content">
+          <div class="dish-title-row"><h3>{{ dish.name }}</h3><span class="dish-price">₦{{ dish.price|floatformat:0 }}</span></div>
+          <p class="dish-description">{{ dish.description }}</p>
+          <div class="dish-footer"><span class="dish-category">{{ dish.get_category_display }}</span>
+            <form class="order-form" action="{% url 'place_order' dish.id %}" method="post" target="_blank">
+              {% csrf_token %}<label class="quantity-control"><span class="sr-only">Quantity for {{ dish.name }}</span><input type="number" name="quantity" min="1" max="20" value="1"></label>
+              <button class="order-button" type="submit">Order now <span aria-hidden="true">↗</span></button>
+            </form>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-menu"><span class="empty-mark">✳</span><h3>A fresh menu is on its way.</h3><p>Check back soon for something delicious.</p></div>
+      {% endfor %}
+    </div>
+    <p class="no-results" hidden>No dishes found. Try another search.</p>
+  </section>
+
+  <section class="story-section" id="story">
+    <div class="story-image"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85" alt="A warm, welcoming restaurant dining room" loading="lazy"><span class="story-image-note">PULL UP A CHAIR</span></div>
+    <div class="story-copy"><p class="eyebrow"><span class="eyebrow-line"></span> A PLACE AT OUR TABLE</p><h2>Food tastes better<br>when it feels like <em>home.</em></h2><p>We bring together the bold flavours we grew up with and the dishes we love discovering. Everything is made to order, meant to be savoured, and even better when shared.</p><a class="text-link" href="https://wa.me/2349065400858" target="_blank" rel="noopener">Say hello on WhatsApp <span aria-hidden="true">↗</span></a></div>
+  </section>
+</main>
+<footer class="site-footer"><a class="brand footer-brand" href="#top"><span class="brand-mark">M</span><span>Mimi's <em>Table</em></span></a><p>Good food. Good company. Always.</p><a class="footer-contact" href="https://wa.me/2349065400858" target="_blank" rel="noopener">WhatsApp us <span aria-hidden="true">↗</span></a><span class="copyright">© {% now "Y" %} Mimi's Table</span></footer>
+{% endblock %}

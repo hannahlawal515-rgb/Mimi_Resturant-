@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Management | Mimi's Table{% endblock %}
+{% block content %}
+<div class="admin-shell">
+  <header class="admin-header"><a class="brand" href="{% url 'home' %}"><span class="brand-mark">M</span><span>Mimi's <em>Table</em></span></a><div class="admin-user">Signed in as {{ request.user.username }} <a href="{% url 'home' %}">View website ↗</a></div></header>
+  <main class="admin-main">
+    <div class="admin-title-row"><div><p class="eyebrow eyebrow-dark"><span class="eyebrow-line"></span> RESTAURANT CONTROL</p><h1>Good morning, {{ request.user.first_name|default:request.user.username }}.</h1></div><a class="button button-green" href="{% url 'admin:index' %}">Open full admin <span aria-hidden="true">↗</span></a></div>
+    <div class="admin-stats"><div class="stat-block"><span>MENU ITEMS</span><strong>{{ dish_count }}</strong><small>{{ available_count }} available now</small></div><div class="stat-block"><span>ALL ORDERS</span><strong>{{ order_count }}</strong><small>{{ today_orders }} today</small></div><div class="stat-block stat-alert"><span>NEW ORDERS</span><strong>{{ new_orders }}</strong><small>Awaiting confirmation</small></div></div>
+    <section class="admin-orders"><div class="admin-section-heading"><div><p class="eyebrow eyebrow-dark"><span class="eyebrow-line"></span> THE LATEST</p><h2>Recent orders</h2></div><a class="text-link" href="{% url 'admin:restaurant_order_changelist' %}">Manage all orders <span aria-hidden="true">↗</span></a></div>
+      {% if recent_orders %}<div class="orders-table-wrap"><table class="orders-table"><thead><tr><th>ORDER</th><th>ITEM</th><th>QTY</th><th>TOTAL</th><th>STATUS</th><th>PLACED</th></tr></thead><tbody>{% for order in recent_orders %}<tr><td>#{{ order.id }}</td><td>{{ order.dish_name }}</td><td>{{ order.quantity }}</td><td>₦{{ order.total_price|floatformat:0 }}</td><td><span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span></td><td>{{ order.created_at|date:"M j, g:i a" }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="admin-empty">No orders yet. New WhatsApp orders will appear here.</p>{% endif %}
+    </section>
+    <section class="admin-actions"><div><span class="action-icon">＋</span><h3>Update the menu</h3><p>Add dishes, edit prices, or mark a favourite unavailable.</p><a class="text-link" href="{% url 'admin:restaurant_dish_changelist' %}">Manage dishes <span aria-hidden="true">↗</span></a></div><div><span class="action-icon">↗</span><h3>Handle orders</h3><p>Review orders and update their status as you go.</p><a class="text-link" href="{% url 'admin:restaurant_order_changelist' %}">View orders <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+</div>
+{% endblock %}
